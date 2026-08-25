@@ -109,7 +109,7 @@ class MockTestsScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(child: _buildMetricMiniCard('Avg. Score', '78%', Icons.center_focus_strong, Colors.orange)),
                 const SizedBox(width: 8),
-                Expanded(child: _buildMetricMiniCard('Best Score', '1280', Icons.trending_up, Colors.emerald)),
+                Expanded(child: _buildMetricMiniCard('Best Score', '1280', Icons.trending_up, Colors.green)),
               ],
             ),
 

@@ -235,7 +235,7 @@ class HomeScreen extends StatelessWidget {
 
             _buildSubjectProgressTile('Physics ⚛️', 0.82, '82%', Colors.blue),
             const SizedBox(height: 8),
-            _buildSubjectProgressTile('Chemistry 🧪', 0.74, '74%', Colors.emerald),
+            _buildSubjectProgressTile('Chemistry 🧪', 0.74, '74%', Colors.green),
             const SizedBox(height: 8),
             _buildSubjectProgressTile('Biology 🧬', 0.79, '79%', Colors.pink),
           ],

@@ -105,7 +105,7 @@ class AnalyticsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  _buildDifficultyRow('Easy', '82%', '(656)', Colors.emerald),
+                  _buildDifficultyRow('Easy', '82%', '(656)', Colors.green),
                   const SizedBox(height: 8),
                   _buildDifficultyRow('Medium', '71%', '(568)', Colors.amber),
                   const SizedBox(height: 8),
@@ -119,7 +119,7 @@ class AnalyticsScreen extends StatelessWidget {
             // 4 Metrics Grid Row
             Row(
               children: [
-                Expanded(child: _buildMiniStat('Accuracy', '78%', '↑ 8%', Colors.emerald)),
+                Expanded(child: _buildMiniStat('Accuracy', '78%', '↑ 8%', Colors.green)),
                 const SizedBox(width: 8),
                 Expanded(child: _buildMiniStat('Attempted', '92%', '↑ 5%', Colors.purple)),
                 const SizedBox(width: 8),
