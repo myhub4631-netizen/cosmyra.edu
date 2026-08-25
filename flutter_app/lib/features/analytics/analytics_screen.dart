@@ -1,5 +1,102 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
+
+class ArcGaugePainter extends CustomPainter {
+  final double progress; // 0.0 to 1.0
+
+  ArcGaugePainter({required this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height - 10);
+    final radius = math.min(size.width / 2, size.height) - 10;
+    const strokeWidth = 14.0;
+
+    // Track Background Arc
+    final bgPaint = Paint()
+      ..color = Colors.white.withOpacity(0.15)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      math.pi,
+      math.pi,
+      false,
+      bgPaint,
+    );
+
+    // Rainbow Gradient Progress Arc
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    final gradient = SweepGradient(
+      startAngle: math.pi,
+      endAngle: math.pi * 2,
+      colors: const [
+        Color(0xFF10B981), // Emerald
+        Color(0xFFF59E0B), // Amber
+        Color(0xFFEC4899), // Pink
+        Color(0xFF8B5CF6), // Purple
+      ],
+    );
+
+    final progressPaint = Paint()
+      ..shader = gradient.createShader(rect)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      rect,
+      math.pi,
+      math.pi * progress,
+      false,
+      progressPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant ArcGaugePainter oldDelegate) {
+    return oldDelegate.progress != progress;
+  }
+}
+
+class ScoreTrendLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path();
+    final points = [
+      Offset(0, size.height * 0.7),
+      Offset(size.width * 0.25, size.height * 0.5),
+      Offset(size.width * 0.5, size.height * 0.65),
+      Offset(size.width * 0.75, size.height * 0.3),
+      Offset(size.width, size.height * 0.2),
+    ];
+
+    path.moveTo(points[0].dx, points[0].dy);
+    for (int i = 1; i < points.length; i++) {
+      path.lineTo(points[i].dx, points[i].dy);
+    }
+
+    final linePaint = Paint()
+      ..color = Colors.white.withOpacity(0.8)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawPath(path, linePaint);
+
+    // Glowing Dots
+    final dotPaint = Paint()..color = Colors.white;
+    for (var pt in points) {
+      canvas.drawCircle(pt, 3.5, dotPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
 
 class AnalyticsScreen extends StatelessWidget {
   final VoidCallback onOpenDrawer;
@@ -14,9 +111,9 @@ class AnalyticsScreen extends StatelessWidget {
           icon: const Icon(Icons.menu),
           onPressed: onOpenDrawer,
         ),
-        title: const Text('Analytics'),
+        title: const Text('Analytics & Performance'),
         actions: [
-          IconButton(icon: const Icon(Icons.calendar_month), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.filter_alt_outlined), onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(
@@ -34,6 +131,13 @@ class AnalyticsScreen extends StatelessWidget {
                   end: Alignment.centerRight,
                 ),
                 borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF2E1065).withOpacity(0.4),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +150,9 @@ class AnalyticsScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Your Overall Performance',
-                            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900),
                           ),
+                          SizedBox(height: 2),
                           Text(
                             'Keep practicing to achieve your goal!',
                             style: TextStyle(color: Color(0xFFDDD6FE), fontSize: 11),
@@ -57,30 +162,74 @@ class AnalyticsScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.white12,
+                          color: Colors.white.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Text('↑ 12%', style: TextStyle(color: Color(0xFF6EE7B7), fontSize: 11, fontWeight: FontWeight.bold)),
+                        child: const Text('↑ 12% vs last month', style: TextStyle(color: Color(0xFF6EE7B7), fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
-                  // Center Arc Score
-                  Center(
-                    child: Column(
-                      children: const [
-                        Text(
-                          '72%',
-                          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w900),
+                  // Rainbow Gauge & Score Line
+                  Row(
+                    children: [
+                      // Arc Gauge (72%)
+                      SizedBox(
+                        width: 140,
+                        height: 90,
+                        child: CustomPaint(
+                          painter: ArcGaugePainter(progress: 0.72),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Text(
+                                    '72%',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                  Text(
+                                    'OVERALL SCORE',
+                                    style: TextStyle(
+                                      color: Color(0xFFDDD6FE),
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                        Text(
-                          'OVERALL SCORE',
-                          style: TextStyle(color: Color(0xFFDDD6FE), fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Score Trend Over Time',
+                              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              height: 50,
+                              child: CustomPaint(
+                                painter: ScoreTrendLinePainter(),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -105,11 +254,11 @@ class AnalyticsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  _buildDifficultyRow('Easy', '82%', '(656)', Colors.green),
-                  const SizedBox(height: 8),
-                  _buildDifficultyRow('Medium', '71%', '(568)', Colors.amber),
-                  const SizedBox(height: 8),
-                  _buildDifficultyRow('Hard', '54%', '(432)', Colors.red),
+                  _buildDifficultyRow('Easy', 0.82, '82%', '(656)', Colors.green),
+                  const SizedBox(height: 10),
+                  _buildDifficultyRow('Medium', 0.71, '71%', '(568)', Colors.amber),
+                  const SizedBox(height: 10),
+                  _buildDifficultyRow('Hard', 0.54, '54%', '(432)', Colors.red),
                 ],
               ),
             ),
@@ -183,16 +332,31 @@ class AnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDifficultyRow(String label, String percent, String count, MaterialColor color) {
-    return Row(
+  Widget _buildDifficultyRow(String label, double val, String percent, String count, MaterialColor color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 8),
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-        const Spacer(),
-        Text(percent, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
-        const SizedBox(width: 4),
-        Text(count, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+        Row(
+          children: [
+            Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+            const SizedBox(width: 8),
+            Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+            const Spacer(),
+            Text(percent, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+            const SizedBox(width: 4),
+            Text(count, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+          ],
+        ),
+        const SizedBox(height: 4),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: LinearProgressIndicator(
+            value: val,
+            minHeight: 5,
+            backgroundColor: const Color(0xFFF1F5F9),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+          ),
+        ),
       ],
     );
   }
