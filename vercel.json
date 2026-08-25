@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run build --prefix web",
   "outputDirectory": "web/dist",
-  "installCommand": "npm install --prefix web",
+  "installCommand": "npm install --prefix web --legacy-peer-deps",
   "framework": "vite",
   "rewrites": [
     {
