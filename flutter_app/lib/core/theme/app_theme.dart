@@ -1,33 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+class AppColors {
+  static const Color primary = Color(0xFF5D3EED);
+  static const Color primaryDark = Color(0xFF2E1065);
+  static const Color primaryLight = Color(0xFF818CF8);
+  static const Color accent = Color(0xFFF59E0B);
+  
+  static const Color backgroundLight = Color(0xFFFDFDFF);
+  static const Color cardLight = Colors.white;
+  static const Color textPrimary = Color(0xFF0F172A);
+  static const Color textSecondary = Color(0xFF64748B);
+  static const Color borderLight = Color(0xFFE2E8F0);
+
+  static const Color success = Color(0xFF10B981);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = Color(0xFFEF4444);
+
+  static const LinearGradient primaryGradient = LinearGradient(
+    colors: [Color(0xFF2E1065), Color(0xFF3B0764), Color(0xFF4C1D95)],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+
+  static const LinearGradient profileGradient = LinearGradient(
+    colors: [Color(0xFF3B0764), Color(0xFF4C1D95), Color(0xFF5D3EED)],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+}
 
 class AppTheme {
-  static const Color primaryBlue = Color(0xFF3B82F6);
-  static const Color darkBg = Color(0xFF0B0F17);
-  static const Color cardBg = Color(0xFF131B2E);
-  static const Color borderColor = Color(0xFF1E293B);
-  static const Color emeraldGreen = Color(0xFF10B981);
-  static const Color roseRed = Color(0xFFF43F5E);
-  static const Color amberYellow = Color(0xFFF59E0B);
+  static ThemeData get lightTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      primaryColor: AppColors.primary,
+      scaffoldBackgroundColor: AppColors.backgroundLight,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.light,
+      ),
+      fontFamily: 'Roboto',
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        scrolledUnderElevation: 1,
+        titleTextStyle: TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+        ),
+        iconTheme: IconThemeData(color: AppColors.textPrimary),
+      ),
+      cardTheme: CardTheme(
+        color: AppColors.cardLight,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: AppColors.borderLight, width: 1),
+        ),
+      ),
+    );
+  }
 
   static ThemeData get darkTheme {
     return ThemeData(
+      useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBg,
-      primaryColor: primaryBlue,
-      cardColor: cardBg,
-      colorScheme: const ColorScheme.dark(
-        primary: primaryBlue,
-        secondary: Color(0xFF6366F1),
-        surface: cardBg,
-        background: darkBg,
+      primaryColor: AppColors.primary,
+      scaffoldBackgroundColor: const Color(0xFF090D16),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.dark,
       ),
-      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: darkBg,
-        elevation: 0,
-        centerTitle: false,
-      ),
+      fontFamily: 'Roboto',
     );
   }
 }
