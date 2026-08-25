@@ -64,7 +64,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   if (isUserMobileApp) {
     return (
       <div className="min-h-screen bg-slate-900 flex flex-col">
-        <LocalhostEnvironmentBar />
         <div className="flex-1">{children}</div>
       </div>
     );
@@ -74,7 +73,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   if (isTeacherMobileApp) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col">
-        <LocalhostEnvironmentBar />
         <div className="flex-1">{children}</div>
       </div>
     );
@@ -84,7 +82,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   if (isLandingPage) {
     return (
       <div className="min-h-screen bg-slate-50 text-gray-900 font-sans flex flex-col">
-        <LocalhostEnvironmentBar />
         <LandingNavbar />
         <main className="flex-1 w-full">{children}</main>
       </div>
@@ -95,7 +92,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   if (isAdmin) {
     return (
       <div className="min-h-screen bg-slate-50 text-gray-900 font-sans flex flex-col">
-        <LocalhostEnvironmentBar />
         <div className="flex flex-1">
           <AdminSidebar
             isCollapsed={isAdminCollapsed}
@@ -115,7 +111,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   // 5. USER WEBSITE & TEACHER WEBSITE LAYOUT (PORT 3000 & 3002)
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-gray-900 font-sans flex flex-col pb-16 md:pb-0">
-      <LocalhostEnvironmentBar />
       <StudentHeader selectedExam={selectedExam} setSelectedExam={setSelectedExam} />
 
       <div className="flex-1 flex">
