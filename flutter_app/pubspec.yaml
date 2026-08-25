@@ -1,7 +1,7 @@
 name: cosmyra_exam_app
-description: "Cosmyra AI-Powered Question Practice & Exam Preparation Platform (100% Native Flutter App)"
+description: "Cosmyra AI-Powered Question Practice & Exam Preparation Platform (Native Flutter Mobile App)"
 publish_to: 'none'
-version: 1.1.3+3
+version: 1.1.4+4
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
